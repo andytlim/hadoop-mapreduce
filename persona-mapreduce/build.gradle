@@ -1,0 +1,42 @@
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+project.ext {
+    projectName = "weblog-mapreduce"
+    projectVersion = ""
+}
+
+// Build jar even with deprecated code
+gradle.projectsEvaluated {
+    tasks.withType(JavaCompile) {
+        options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+    }
+}
+
+jar {
+    baseName = "${projectName}"
+    version =  "${projectVersion}"
+}
+
+repositories {
+    maven {
+        url "https://repository.cloudera.com/artifactory/cloudera-repos/"
+    }
+    jcenter()
+    mavenLocal()
+}
+
+dependencies {
+	// Common
+    compile 'org.slf4j:slf4j-api:1.7.7'
+    compile 'org.slf4j:slf4j-log4j12:1.7.12'
+    compile 'com.google.code.gson:gson:2.3.1'
+    
+    // Hadoop
+    compile 'org.apache.hadoop:hadoop-client:2.2.0-cdh5.0.+'
+    
+	testCompile 'org.apache.mrunit:mrunit:0.9.0-incubating:hadoop2'
+    testCompile 'junit:junit:4.11'
+}
